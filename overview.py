@@ -261,7 +261,9 @@ def build_reports(
         # Banken, die oft nur als Analysten-Haus genannt werden ("upgraded at Morgan Stanley"),
         # bekommen keine Signale, wenn noch eine andere Firma in der Meldung steht
         owners = [s for s in in_title if s.ticker not in BROKERS] or in_title
-        for st in in_text:
+        # Nur Meldungen, in deren Ueberschrift die Firma steht (sonst oft nur Randerwaehnung,
+        # z. B. Sammelartikel "In der heutigen Sendung geht es um diese Werte: ...")
+        for st in in_title:
             # Signale nur zuordnen, wenn die Meldung eindeutig von dieser Firma handelt
             own = st in owners
             art = Article(it, pos if own else [], neg if own else [], new=it.uid not in seen)

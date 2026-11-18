@@ -47,8 +47,9 @@ async def send(session: aiohttp.ClientSession, channel_id: str, token: str, payl
 
 
 async def main(dry_run: bool) -> None:
-    token = os.getenv("DISCORD_TOKEN", "").strip()
-    channel_id = os.getenv("NEWS_CHANNEL_ID", "").strip()
+    # strip("﻿ ...") entfernt auch unsichtbare BOM-Zeichen, falls beim Setzen der Secrets entstanden
+    token = os.getenv("DISCORD_TOKEN", "").strip().strip("﻿").strip()
+    channel_id = os.getenv("NEWS_CHANNEL_ID", "").strip().strip("﻿").strip()
     if not dry_run and not (token and channel_id):
         sys.exit("DISCORD_TOKEN und NEWS_CHANNEL_ID muessen gesetzt sein.")
 

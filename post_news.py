@@ -128,6 +128,8 @@ async def main(dry_run: bool, ignore_seen: bool, force: bool) -> None:
             await overview.add_quotes(session, reports)
         messages = overview.build_overview_messages(reports, [f.name for f in feeds], now, window, edition) if reports else []
 
+        if dry_run:
+            print(overview.diagnose(items, stocks, window, now))
         if not reports:
             print("Keine Aktie mit erkannten Signalen - diesmal wird nichts gepostet.")
         elif dry_run:

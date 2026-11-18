@@ -62,7 +62,10 @@ STOCK_FOOTER = "⚠️ Keine Anlageberatung · Einstufung automatisch aus Schlag
 # --------------------------------------------------------------------------- #
 POSITIVE: dict[str, str] = {
     "Prognose angehoben": r"prognose\w* (?:\w+ )?(?:angehoben|erhöht|hochgeschraubt)|(?:hebt|erhöht|schraubt) .{0,40}(?:prognose|ausblick|jahresziel)|rais(?:es|ed|ing) (?:its |full-year |annual )?(?:guidance|forecast|outlook)|(?:lifts?|boosts?|ups) (?:its |full-year |annual )?(?:guidance|forecast|outlook)|(?:guidance|outlook|forecast) raised",
-    "Zahlen über Erwartungen": r"übertr(?:ifft|ifft die|af) .{0,20}erwartungen|über (?:den )?erwartungen|besser als erwartet|stärker als erwartet|beats? .{0,25}(?:estimates|expectations|forecasts)|tops? .{0,25}(?:estimates|expectations)|better[- ]than[- ]expected|stronger[- ]than[- ]expected|above (?:analyst )?expectations",
+    "Zahlen über Erwartungen": r"übertr(?:ifft|ifft die|af) .{0,20}(?:erwartungen|prognosen|schätzungen)|(?:earnings|quarterly|revenue|profit|sales|top[- ]and[- ]bottom[- ]line) beat|beats? (?:on |wall street|the street|analyst)|top(?:s|ped) (?:wall street|street|analyst)|über (?:den )?erwartungen|besser als erwartet|stärker als erwartet|beats? .{0,25}(?:estimates|expectations|forecasts)|tops? .{0,25}(?:estimates|expectations)|better[- ]than[- ]expected|stronger[- ]than[- ]expected|above (?:analyst )?expectations",
+    "Starke Geschäftszahlen": r"starke[snm]? (?:zahlen|quartal|geschäftszahlen|wachstum)|(?:gewinn|umsatz|ergebnis|überschuss|nettogewinn|ebit\w*) (?:steigt|stieg|springt|sprang|klettert|kletterte|wächst|wuchs|zieht an|legt (?:\w+ )?zu)|(?:blowout|strong|stellar|solid|robust) (?:results|quarter|earnings|sales|growth)|(?:profit|revenue|sales|earnings) (?:jumps?|surges?|soars?|rises?|climbs?|grows?)",
+    "Starker Ausblick": r"(?:starke[rn]?|optimistische[rn]?|zuversichtliche[rn]?) (?:ausblick|prognose)|zuversichtlich für|(?:strong|upbeat|bullish|optimistic|solid|robust) (?:guidance|outlook|forecast)",
+    "Positive Analysten-Einstufung": r"(?:belässt|bestätigt|startet|nimmt|hebt|stuft)\b.{0,60}\b(?:auf|mit) ['\"„‚]?(?:buy|kaufen|overweight|outperform|add|accumulate)\b",
     "Rekordergebnis": r"rekord(?:umsatz|gewinn|ergebnis|quartal|jahr|auftragseingang|auftragsbestand)|record (?:revenue|profit|sales|quarter|earnings|results)",
     "Großauftrag": r"großauftrag|grossauftrag|milliardenauftrag|rekordauftrag|auftrag (?:über|im wert)|(?:erhält|gewinnt|ergattert|sichert sich) .{0,40}auftrag|(?:wins?|won|secures?|lands?|awarded) .{0,30}(?:contract|order)|(?:billion|major|large)[- ](?:dollar )?(?:contract|order)",
     "Kursziel erhöht": r"kursziel (?:\w+ )?(?:angehoben|erhöht|hochgesetzt)|(?:hebt|erhöht) .{0,40}kursziel|rais(?:es|ed) .{0,30}price target|price target (?:raised|hiked|increased)|(?:lifts?|ups|boosts?) .{0,25}price target",
@@ -78,6 +81,9 @@ POSITIVE: dict[str, str] = {
 NEGATIVE: dict[str, str] = {
     "Prognose gesenkt / Gewinnwarnung": r"gewinnwarnung|umsatzwarnung|prognose\w* (?:\w+ )?(?:gesenkt|gekappt|kassiert|zurückgenommen)|(?:senkt|kappt|kassiert|streicht) .{0,40}(?:prognose|ausblick|jahresziel)|profit warning|(?:cuts?|lowers?|slashes?|trims?) (?:its |full-year |annual )?(?:guidance|forecast|outlook)|(?:guidance|outlook|forecast) (?:cut|lowered|slashed)|warns? (?:on|of) (?:profit|earnings|sales|revenue)",
     "Zahlen unter Erwartungen": r"verfehlt .{0,25}erwartungen|unter (?:den )?erwartungen|schlechter als erwartet|schwächer als erwartet|enttäusch|miss(?:es|ed)? .{0,25}(?:estimates|expectations|forecasts)|falls? short of|worse[- ]than[- ]expected|weaker[- ]than[- ]expected|below (?:analyst )?expectations|disappoint",
+    "Schwache Geschäftszahlen": r"schwache[snm]? (?:zahlen|quartal|geschäftszahlen|nachfrage)|(?:gewinn|umsatz|ergebnis|überschuss|nettogewinn|ebit\w*) (?:sinkt|sank|bricht ein|brach ein|schrumpft|schrumpfte|fällt|fiel|geht zurück|ging zurück)|gewinneinbruch|umsatzrückgang|umsatzeinbruch|(?:weak|soft|disappointing|dismal) (?:results|quarter|earnings|sales|demand)|(?:profit|revenue|sales|earnings) (?:falls?|drops?|slumps?|plunges?|declines?|shrinks?)",
+    "Schwacher Ausblick": r"(?:schwache[rn]?|vorsichtige[rn]?|enttäuschende[rn]?|trübe[rn]?) (?:ausblick|prognose)|(?:weak|soft|gloomy|cautious|disappointing|downbeat|bleak) (?:guidance|outlook|forecast)",
+    "Negative Analysten-Einstufung": r"(?:belässt|bestätigt|startet|nimmt|senkt|stuft)\b.{0,60}\b(?:auf|mit) ['\"„‚]?(?:sell|verkaufen|underweight|underperform|reduce)\b",
     "Verluste": r"rote zahlen|tiefrot|in die verlustzone|verlust ausgeweitet|verlust (?:wächst|steigt)|swings? to (?:a )?loss|loss widen|wider loss",
     "Kursziel gesenkt": r"kursziel (?:\w+ )?(?:gesenkt|reduziert|gekappt)|(?:senkt|kappt|reduziert) .{0,40}kursziel|(?:cuts?|lowers?|slashes?|trims?) .{0,30}price target|price target (?:cut|lowered|reduced|slashed)",
     "Herabstufung durch Analysten": r"abgestuft|herabgestuft|abstufung|stuft .{0,40} ab\b|verkaufsempfehlung|downgrade[sd]?\b|downgraded to (?:sell|underperform|underweight|neutral|hold)",
@@ -532,4 +538,26 @@ def preview_text(messages: list[list[dict]]) -> str:
             if e.get("footer"):
                 out.append("┃ " + e["footer"]["text"])
             out.append("")
+    return "\n".join(out)
+
+
+def diagnose(items: list[bot.NewsItem], stocks: list[Stock], window: timedelta, now: datetime) -> str:
+    """Zeigt fuer Probelaeufe, welche Aktien erwaehnt werden und welche Signale erkannt wurden."""
+    hits: dict[str, list[str]] = {}
+    for it in items:
+        if it.published and now - it.published > window:
+            continue
+        text = f"{it.title}. {it.summary}"
+        found = find_stocks(text, it.feed.lang, stocks)
+        if not found:
+            continue
+        pos, neg = find_signals(text)
+        sig = (" +" + ",".join(pos) if pos else "") + (" -" + ",".join(neg) if neg else "")
+        promo = " [WERBUNG-FILTER]" if is_promo(it) else ""
+        for st in found:
+            hits.setdefault(st.name, []).append(f"{it.feed.name}: {it.title[:110]}{sig}{promo}")
+    out = [f"==================== Diagnose: {len(hits)} Aktien erwaehnt ===================="]
+    for name, lines in sorted(hits.items(), key=lambda kv: -len(kv[1]))[:30]:
+        out.append(f"## {name} ({len(lines)} Meldungen)")
+        out += [f"   {l}" for l in lines[:6]]
     return "\n".join(out)

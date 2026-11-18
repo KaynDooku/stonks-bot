@@ -566,3 +566,16 @@ def diagnose(items: list[bot.NewsItem], stocks: list[Stock], window: timedelta, 
         out.append(f"## {name} ({len(lines)} Meldungen)")
         out += [f"   {l}" for l in lines[:6]]
     return "\n".join(out)
+
+
+async def check_tickers(session: aiohttp.ClientSession, stocks: list[Stock]) -> list[str]:
+    """Probelauf: prueft, ob fuer jede Aktie der Liste ein Kurs abrufbar ist (findet falsche Kuerzel)."""
+    sem = asyncio.Semaphore(6)
+
+    async def one(st: Stock) -> str | None:
+        async with sem:
+            q = await fetch_quote(session, st.ticker)
+            return None if q else f"{st.name} ({st.ticker})"
+
+    results = await asyncio.gather(*(one(st) for st in stocks))
+    return [r for r in results if r]

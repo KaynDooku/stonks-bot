@@ -132,6 +132,9 @@ async def main(dry_run: bool, ignore_seen: bool, force: bool) -> None:
 
         if dry_run:
             print(overview.diagnose(items, stocks, window, now))
+            bad = await overview.check_tickers(session, stocks)
+            print(f"Kurspruefung: {len(stocks) - len(bad)} von {len(stocks)} Aktien mit Kurs."
+                  + (" Kein Kurs fuer: " + ", ".join(bad) if bad else ""))
         if not reports:
             print("Keine Aktie mit erkannten Signalen - diesmal wird nichts gepostet.")
         elif dry_run:

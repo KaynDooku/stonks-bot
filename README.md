@@ -19,7 +19,7 @@ Es wird **keine KI** verwendet. Die Einstufung ist rein regelbasiert:
 | Datei | Inhalt |
 |---|---|
 | `feeds.json` | Nachrichtenquellen (RSS-Feeds) |
-| `aktien.json` | beobachtete Aktien (ca. 200: DAX, MDAX, große US- und EU-Werte) mit den Namen, unter denen sie in Meldungen vorkommen |
+| `aktien.json` | beobachtete Aktien (ca. 280: DAX, MDAX, SDAX, TecDAX, große US- und EU-Werte) mit den Namen, unter denen sie in Meldungen vorkommen |
 | `overview.py` | Erkennung von Firmen und Schlagworten, Ampel, Aufbau der Discord-Nachrichten |
 | `post_news.py` | ein Durchlauf für GitHub Actions |
 | `bot.py` | Dauerbetrieb-Bot mit `/news`, `/quellen` usw. (unverändert) |

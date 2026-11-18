@@ -1,0 +1,10 @@
+[
+  {"name": "Tagesschau Wirtschaft", "url": "https://www.tagesschau.de/wirtschaft/index~rss2.xml", "lang": "de", "color": "#004B87"},
+  {"name": "Handelsblatt Finanzen", "url": "https://www.handelsblatt.com/contentexport/feed/finanzen", "lang": "de", "color": "#F28C00"},
+  {"name": "WirtschaftsWoche Finanzen", "url": "https://www.wiwo.de/contentexport/feed/rss/finanzen", "lang": "de", "color": "#C8102E"},
+  {"name": "Spiegel Wirtschaft", "url": "https://www.spiegel.de/wirtschaft/index.rss", "lang": "de", "color": "#E64415"},
+  {"name": "CNBC Top News", "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html", "lang": "en", "color": "#005594"},
+  {"name": "CNBC Markets", "url": "https://www.cnbc.com/id/20910258/device/rss/rss.html", "lang": "en", "color": "#005594"},
+  {"name": "MarketWatch", "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "lang": "en", "color": "#4C9A2A"},
+  {"name": "Investing.com", "url": "https://www.investing.com/rss/news.rss", "lang": "en", "color": "#F5A623"}
+]

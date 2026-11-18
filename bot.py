@@ -41,7 +41,7 @@ BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
 TOKEN = os.getenv("DISCORD_TOKEN", "").strip()
-DEFAULT_CHANNEL_ID = int(os.getenv("NEWS_CHANNEL_ID") or 0)
+DEFAULT_CHANNEL_ID = int((os.getenv("NEWS_CHANNEL_ID") or "0").strip().strip("﻿") or 0)
 # Channel-Name, der automatisch auf jedem Server gesucht wird (falls kein /setchannel gesetzt)
 DEFAULT_CHANNEL_NAME = os.getenv("NEWS_CHANNEL_NAME", "").strip().lstrip("#").lower()
 POLL_MINUTES = max(1, int(os.getenv("POLL_INTERVAL_MINUTES") or 10))

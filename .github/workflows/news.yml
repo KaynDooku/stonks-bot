@@ -1,0 +1,43 @@
+name: Finanz-News posten
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # alle 15 Minuten (GitHub startet manchmal ein paar Minuten spaeter)
+  workflow_dispatch:          # manuell starten: Actions -> Finanz-News posten -> Run workflow
+
+permissions:
+  contents: write             # damit state.json (bereits gepostete News) gespeichert werden kann
+
+concurrency:
+  group: finanz-news
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Pakete installieren
+        run: pip install -r requirements.txt
+
+      - name: News holen und posten
+        run: python post_news.py
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          NEWS_CHANNEL_ID: ${{ secrets.NEWS_CHANNEL_ID }}
+          MAX_POSTS_PER_CYCLE: "5"
+          ENRICH_ARTICLES: "true"
+
+      - name: Gepostete News merken (state.json speichern)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || (git commit -m "News-Status aktualisieren" && git push)

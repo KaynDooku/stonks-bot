@@ -110,11 +110,13 @@ class State:
         self.path = path
         self.seen: list[str] = []
         self.channels: dict[str, int] = {}
+        self.extra: dict = {}  # weitere Angaben (z. B. bereits gepostete Ausgaben des Aktien-Ueberblicks)
         if path.exists():
             try:
                 data = json.loads(path.read_text(encoding="utf-8-sig"))
                 self.seen = data.get("seen", [])
                 self.channels = {k: int(v) for k, v in data.get("channels", {}).items()}
+                self.extra = {k: v for k, v in data.items() if k not in ("seen", "channels")}
             except (json.JSONDecodeError, OSError) as e:
                 log.warning("state.json konnte nicht gelesen werden (%s) - starte neu.", e)
         self._seen_set = set(self.seen)
@@ -131,7 +133,7 @@ class State:
         self.seen = self.seen[-self.MAX_SEEN:]
         self._seen_set = set(self.seen)
         tmp = self.path.with_suffix(".tmp")
-        tmp.write_text(json.dumps({"seen": self.seen, "channels": self.channels}, indent=1), encoding="utf-8")
+        tmp.write_text(json.dumps({"seen": self.seen, "channels": self.channels, **self.extra}, indent=1, ensure_ascii=False), encoding="utf-8")
         tmp.replace(self.path)
 
 

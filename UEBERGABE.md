@@ -4,45 +4,40 @@ Diese Datei ist für die Weiterarbeit auf einem anderen PC bzw. in einer neuen C
 
 ## Aktueller Stand
 
-- **Discord-Bot:** `Stonks#6102`, Server **Exekutor**, Channel **#stonks📈**
+- **Discord-Bot:** `Stonks#6102`, Server **Exekutor** (privat, Freunde/Bekannte), Channel **#stonks📈**
   (Channel-ID `1572580534545031188`). Public Bot ist ausgeschaltet.
-- **Läuft gerade über GitHub Actions** (`.github/workflows/news.yml`): alle 15 Minuten
-  startet `post_news.py`, postet bis zu 5 neue Finanz-News und speichert `state.json`
-  (bereits gepostete Meldungen) zurück ins Repo.
+- **Läuft über GitHub Actions** (`.github/workflows/news.yml`) – das bleibt so (Entscheidung
+  des Nutzers, ein Umzug zu Oracle o. Ä. ist **nicht** mehr geplant).
 - **Secrets im Repo:** `DISCORD_TOKEN`, `NEWS_CHANNEL_ID`.
 - 2FA ist bei GitHub aktiv.
 
-## Warum ein Umzug geplant ist
+## Nachrichtenformat (gemeinsam mit dem Nutzer festgelegt)
 
-GitHubs Nutzungsbedingungen (Additional Product Terms, Abschnitt Actions) erlauben
-GitHub-gehostete Runner nur für Aktivitäten rund um Entwicklung/Test/Veröffentlichung der
-Software im Repo – ein dauerhafter News-Cronjob fällt nicht darunter. Ziel: **Oracle Cloud
-Always Free** (kostenlos, legal, PC muss nicht an sein, `/`-Befehle funktionieren wieder).
+- **Aktien-Überblick** statt einzelner Schlagzeilen: Mo–Fr 8:30 / 12:30 / 22:15 Uhr,
+  Sa + So 10:00 Uhr. Nur posten, wenn mindestens 1 Aktie relevante Signale hat; max. 8 Aktien
+  (Nutzerwunsch; Reihenfolge 🟢 vor 🟡 vor 🔴, Überblick verteilt sich auf ca. 2–3 Nachrichten).
+- **Keine KI** (bewusst entschieden, keine laufenden Kosten). Ampel 🟢🟡🔴 rein regelbasiert
+  aus Schlagworten, **neutral formuliert** („Überwiegend positive Nachrichtenlage“ usw.),
+  damit es nicht wie eine Anlageempfehlung wirkt.
+- **Quellen sind dem Nutzer sehr wichtig:** pro Aktie bis zu 5 nummerierte Artikel aus
+  möglichst verschiedenen Medien, jedes Signal mit Artikelnummer, Quellenblock mit Links.
+- Kurse von Yahoo Finance (inoffiziell, verzögert); fällt die Abfrage aus, fehlt nur der Kurs.
+- Keine Bilder/Autoren, Artikelseiten werden **nicht** abgerufen. Vorspann max. ca. 150 Zeichen
+  (Leistungsschutzrecht der Presseverlage).
+- Haftungsausschluss-Text vom Nutzer wörtlich vorgegeben (in `overview.py`, `DISCLAIMER`).
+- Wichtig: Nutzer möchte bei Unklarheiten zu Design/Inhalt **vorher gefragt** werden.
 
-## Nächste Schritte (Oracle-Umzug)
+## Mögliche nächste Schritte
 
-1. **Nutzer:** Oracle-Always-Free-Konto anlegen (<https://www.oracle.com/cloud/free/>),
-   Home Region **Germany Central (Frankfurt)**, 2FA aktivieren.
-2. SSH-Schlüssel auf dem PC erzeugen (`ssh-keygen -t ed25519 -f ~/.ssh/oracle_stonks`).
-3. **Nutzer:** VM anlegen – Ubuntu 24.04, Shape **VM.Standard.E2.1.Micro** (Always Free)
-   oder Ampere A1, öffentlichen SSH-Schlüssel hinterlegen, öffentliche IP notieren.
-4. Server einrichten (per SSH):
-   - `unattended-upgrades` aktivieren, nur Schlüssel-Login (kein Passwort)
-   - eigener Benutzer `stonks` ohne Root-Rechte, Code nach `/opt/stonks-bot`
-   - Python-venv + `pip install -r requirements.txt`
-   - `.env` mit `DISCORD_TOKEN`, `NEWS_CHANNEL_NAME=stonks`, Rechte `600`
-   - aktuelle `state.json` aus dem Repo übernehmen (sonst doppelte Posts)
-   - systemd-Dienst für `bot.py` mit `Restart=always`
-5. Prüfen: Bot online, postet in #stonks📈, `/news` funktioniert.
-6. Danach GitHub-Workflow abschalten:
-   `gh workflow disable news.yml -R KaynDooku/stonks-bot`
+- Nach Probeläufen prüfen, welche Feeds in `feeds.json` keine Meldungen liefern
+  (steht im Log: „Keine Meldungen von: …“), und diese korrigieren oder entfernen.
+- Schlagwort-Listen (`POSITIVE` / `NEGATIVE` in `overview.py`) anhand echter Ausgaben nachschärfen.
 
 ## Hinweise für die Einrichtung
 
 - Der Discord-Token steht **nicht** im Repo (nur als verschlüsseltes Secret, das man nicht
-  auslesen kann). Für den Server muss er neu eingetragen werden – notfalls im Discord
-  Developer Portal unter *Bot → Reset Token* einen neuen erzeugen und danach auch das
-  GitHub-Secret aktualisieren, solange der Workflow noch läuft.
+  auslesen kann). Wird er woanders gebraucht, im Discord Developer Portal unter
+  *Bot → Reset Token* einen neuen erzeugen und danach auch das GitHub-Secret aktualisieren.
 - Unter Windows PowerShell 5.1 hängt das Pipen an Programme ein unsichtbares BOM an –
   vorher `$OutputEncoding = New-Object System.Text.UTF8Encoding $false` setzen.
 - Der Nutzer ist kein Entwickler: Anleitungen bitte Schritt für Schritt auf Deutsch.

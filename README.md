@@ -1,34 +1,68 @@
 # 📈 Finanz-News Discord Bot
 
-Postet automatisch aktuelle Finanznachrichten in einen Discord-Channel – jeweils als
-ausführliches Embed mit:
+Postet zu festen Zeiten einen **Aktien-Überblick** in einen Discord-Channel:
 
-- Titel (verlinkt) und Zusammenfassung des Artikels
-- Vorschaubild
-- Quelle mit Link + Domain, Buttons „Zum Artikel" und zur Startseite des Mediums
-- Veröffentlichungszeit (in der Ortszeit jedes Nutzers + „vor X Minuten")
-- Autor, Themen/Tags, Sprache und erkannte Börsenticker (z. B. `AAPL`)
+- Mo–Fr um **8:30**, **12:30** und **22:15 Uhr**, Sa + So um **10:00 Uhr** (deutsche Zeit)
+- bis zu **8 Aktien** mit relevanten Neuigkeiten, jeweils mit
+  - Kurs und Tagesveränderung (Yahoo Finance, ca. 15 Min. verzögert)
+  - bis zu 5 nummerierten Meldungen, möglichst aus verschiedenen Medien, mit kurzem Vorspann
+  - erkannten positiven Signalen und Risiken (mit Verweis auf den jeweiligen Artikel)
+  - einer automatischen Einstufung 🟢🟡🔴 der **Nachrichtenlage**
+  - allen Quellen mit Datum, Uhrzeit und Link zum Nachlesen
+- verbindlicher Hinweis „Keine Anlageberatung“ in jedem Überblick
+- gibt es keine Aktie mit erkannten Signalen, wird **nichts** gepostet
 
-**Quellen** (in `feeds.json`, beliebig erweiterbar): Tagesschau Wirtschaft, Handelsblatt,
-WirtschaftsWoche, Spiegel Wirtschaft, CNBC (Top News + Markets), MarketWatch, Investing.com.
+Es wird **keine KI** verwendet. Die Einstufung ist rein regelbasiert:
+🟢 mindestens 2 verschiedene positive und keine negativen Signale,
+🔴 mehr negative als positive Signale, sonst 🟡.
+
+| Datei | Inhalt |
+|---|---|
+| `feeds.json` | Nachrichtenquellen (RSS-Feeds) |
+| `aktien.json` | beobachtete Aktien (ca. 200: DAX, MDAX, große US- und EU-Werte) mit den Namen, unter denen sie in Meldungen vorkommen |
+| `overview.py` | Erkennung von Firmen und Schlagworten, Ampel, Aufbau der Discord-Nachrichten |
+| `post_news.py` | ein Durchlauf für GitHub Actions |
+| `bot.py` | Dauerbetrieb-Bot mit `/news`, `/quellen` usw. (unverändert) |
+
+**Quellen** (in `feeds.json`, beliebig erweiterbar): Tagesschau (Wirtschaft + Börse), Handelsblatt,
+WirtschaftsWoche, Spiegel, FAZ, n-tv, Welt, Manager Magazin, finanznachrichten.de, onvista,
+CNBC (4 Feeds), MarketWatch (2 Feeds), Business Insider Markets, Investing.com.
+Werbe- und „Hot-Stock“-Artikel werden herausgefiltert.
+
+### Aktie hinzufügen
+
+In `aktien.json` einen Eintrag ergänzen. `ticker` ist das Kürzel bei Yahoo Finance
+(deutsche Aktien mit `.DE`), `aliases` sind die Namen in den Meldungen (Groß-/Kleinschreibung zählt):
+
+```json
+{"name": "Siemens", "ticker": "SIE.DE", "aliases": ["Siemens"]}
+```
+
+Optional: `aliases_de` / `aliases_en` (nur in deutschen bzw. englischen Quellen) und `exclude`
+(Wörter, die nicht gemeint sind, z. B. `"Bayer Leverkusen"`).
+
+### Probelauf (nichts wird gepostet)
+
+**Actions → Finanz-News posten → Run workflow** → Zweig auswählen → Häkchen bei
+„Probelauf“ lassen → **Run workflow**. Im Protokoll des Laufs (Schritt „Aktien-Ueberblick
+erstellen und posten“) steht dann, was gepostet würde. Ohne Häkchen wird sofort gepostet.
 
 ---
 
 ## ☁️ Kostenlos rund um die Uhr über GitHub Actions
 
 `post_news.py` holt einmal neue News, postet sie und beendet sich. GitHub startet es über
-`.github/workflows/news.yml` alle 15 Minuten. `state.json` (bereits gepostete News) wird
+`.github/workflows/news.yml` zu den oben genannten Zeiten. `state.json` (bereits verwendete News) wird
 nach jedem Lauf automatisch im Repository gespeichert.
 
 1. Auf <https://github.com/new> ein Repository anlegen, **Public** (dann sind die
-   Actions-Minuten unbegrenzt kostenlos; bei *Private* reichen die 2000 Gratis-Minuten
-   für einen 15-Minuten-Takt nicht).
+   Actions-Minuten unbegrenzt kostenlos).
 2. „uploading an existing file" → alle Dateien aus dem Upload-Ordner hineinziehen
    (**niemals `.env` hochladen!**) → „Commit changes".
 3. **Settings → Secrets and variables → Actions → New repository secret**:
    - `DISCORD_TOKEN` = dein Bot-Token
    - `NEWS_CHANNEL_ID` = ID des News-Channels
-4. **Actions** → „Finanz-News posten" → **Run workflow** für einen ersten Test.
+4. **Actions** → „Finanz-News posten" → **Run workflow** für einen ersten Probelauf.
 
 Hinweise: Die /-Befehle gibt es in diesem Modus nicht (dafür bräuchte es einen Dauerprozess).
 GitHub startet geplante Läufe manchmal einige Minuten verspätet.

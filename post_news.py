@@ -111,7 +111,9 @@ async def main(dry_run: bool, ignore_seen: bool, force: bool) -> None:
 
     feeds = bot.load_feeds()
     stocks = overview.load_stocks()
-    seen = set() if ignore_seen else set(state.seen)
+    # Eigene Liste fuer den Ueberblick (die alte Liste "seen" gehoert zu den Einzel-Meldungen von bot.py)
+    used: list[str] = state.extra.get("ueberblick_gesehen", [])
+    seen = set() if ignore_seen else set(used)
 
     async with aiohttp.ClientSession(headers={"User-Agent": bot.USER_AGENT}) as session:
         items = await bot.fetch_all(session, feeds)
@@ -148,8 +150,12 @@ async def main(dry_run: bool, ignore_seen: bool, force: bool) -> None:
         return
 
     # Alle ausgewerteten Meldungen merken, damit sie nicht erneut als "neu" zaehlen
+    used_set = set(used)
     for it in items:
-        state.mark_seen(it.uid)
+        if it.uid not in used_set:
+            used.append(it.uid)
+            used_set.add(it.uid)
+    state.extra["ueberblick_gesehen"] = used[-3000:]
     if slot and not force:
         state.extra["ausgaben"] = (done + [slot[0]])[-30:]
     state.extra["letzte_ausgabe"] = now.isoformat()

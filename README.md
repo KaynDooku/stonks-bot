@@ -25,8 +25,8 @@ Es wird **keine KI** verwendet. Die Einstufung ist rein regelbasiert:
 | `bot.py` | Dauerbetrieb-Bot mit `/news`, `/quellen` usw. (unverändert) |
 
 **Quellen** (in `feeds.json`, beliebig erweiterbar): Tagesschau (Wirtschaft + Börse), Handelsblatt,
-WirtschaftsWoche, Spiegel, FAZ, n-tv, Welt, Manager Magazin, finanzen.net, onvista, Börse Frankfurt,
-CNBC (4 Feeds), MarketWatch (2 Feeds), Yahoo Finance, Nasdaq, Investing.com.
+WirtschaftsWoche, Spiegel, FAZ, n-tv, Welt, Manager Magazin, finanznachrichten.de, onvista,
+CNBC (4 Feeds), MarketWatch (2 Feeds), Business Insider Markets, Investing.com.
 Werbe- und „Hot-Stock“-Artikel werden herausgefiltert.
 
 ### Aktie hinzufügen

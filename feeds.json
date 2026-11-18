@@ -10,14 +10,12 @@
   {"name": "Manager Magazin", "url": "https://www.manager-magazin.de/finanzen/index.rss", "lang": "de", "color": "#E2001A"},
   {"name": "finanznachrichten.de", "url": "https://www.finanznachrichten.de/rss-aktien-nachrichten", "lang": "de", "color": "#0B5394"},
   {"name": "onvista", "url": "https://www.onvista.de/news/feed/rss.xml", "lang": "de", "color": "#00A0E1"},
-  {"name": "ARIVA", "url": "https://www.ariva.de/news/rss", "lang": "de", "color": "#00305E"},
   {"name": "CNBC Top News", "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html", "lang": "en", "color": "#005594"},
   {"name": "CNBC Markets", "url": "https://www.cnbc.com/id/20910258/device/rss/rss.html", "lang": "en", "color": "#005594"},
   {"name": "CNBC Business", "url": "https://www.cnbc.com/id/10001147/device/rss/rss.html", "lang": "en", "color": "#005594"},
   {"name": "CNBC Earnings", "url": "https://www.cnbc.com/id/15839135/device/rss/rss.html", "lang": "en", "color": "#005594"},
   {"name": "MarketWatch", "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "lang": "en", "color": "#4C9A2A"},
   {"name": "MarketWatch Market Pulse", "url": "https://feeds.content.dowjones.io/public/rss/mw_marketpulse", "lang": "en", "color": "#4C9A2A"},
-  {"name": "Yahoo Finance", "url": "https://finance.yahoo.com/rss/topstories", "lang": "en", "color": "#6001D2"},
   {"name": "Business Insider Markets", "url": "https://markets.businessinsider.com/rss/news", "lang": "en", "color": "#0090BA"},
   {"name": "Investing.com", "url": "https://www.investing.com/rss/news.rss", "lang": "en", "color": "#F5A623"}
 ]

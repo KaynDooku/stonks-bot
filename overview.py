@@ -72,7 +72,9 @@ POSITIVE: dict[str, str] = {
     "Hochstufung durch Analysten": r"hochgestuft|hochstufung|stuft .{0,40} hoch\b|kaufempfehlung|\bupgraded\b|upgrades? .{0,40}to (?:buy|outperform|overweight)|analyst upgrade",
     "Partnerschaft / Kooperation": r"partnerschaft|kooperation|zusammenarbeit mit|partners? with|partnership|teams? up with|strategic alliance",
     "Zulassung erhalten": r"zulassung (?:erteilt|erhalten)|(?:erhält|bekommt) .{0,30}zulassung|grünes licht|fda (?:approv|clear|nod)|(?:wins?|receives?|gets?) .{0,25}approval|ema empfiehlt",
-    "Neues Produkt / Technologie": r"stellt .{0,30}neue[snrm]? .{0,30} vor\b|präsentiert .{0,30}neue|neue[snrm]? (?:produkt|modell|chip|plattform|medikament|technologie)|unveil(?:s|ed)|launch(?:es|ed) (?:a |its |new )|introduces? new",
+    "Neues Produkt / Produktionsstart": r"startet .{0,40}(?:produktion|fertigung|pilotprojekt|pilotversuch)|nimmt .{0,30}(?:produktion|fertigung) auf|produktionsstart|start(?:s|ed)? .{0,30}production|begins? .{0,30}production|stellt .{0,30}neue[snrm]? .{0,30} vor\b|präsentiert .{0,30}neue|neue[snrm]? (?:produkt|modell|chip|plattform|medikament|technologie)|unveil(?:s|ed)|launch(?:es|ed) (?:a |its |new )|introduces? new",
+    "Investition / Ausbau": r"milliardeninvestition|milliardenversprechen|investiert .{0,30}(?:milliarden|millionen)|neue[snm]? (?:werk|fabrik|standort)|baut .{0,30}(?:werk|fabrik) aus|invest(?:s|ing)? .{0,25}(?:billion|million)|new (?:plant|factory)|expands? (?:its |production|capacity)",
+    "Profitiert von aktueller Entwicklung": r"\bprofitiert\b|profitieren (?:dürfte|könnte)|benefit(?:s|ing|ed)? from|is benefiting|tailwind|rückenwind",
     "Aktienrückkauf / Dividende": r"aktienrückkauf|rückkaufprogramm|sonderdividende|(?:erhöht|steigert) .{0,20}dividende|dividende (?:erhöht|angehoben)|buyback|share repurchase|special dividend|rais(?:es|ed) .{0,20}dividend|dividend (?:hike|increase)",
     "Staatliche Förderung / Politik": r"fördermittel|förderung|förderzusage|subvention|staatshilfe|sondervermögen|rüstungsausgaben|verteidigungsausgaben|government (?:contract|funding|grant|support)|subsid(?:y|ies)|chips act|defen[cs]e spending",
     "Starke Nachfrage": r"starke nachfrage|hohe nachfrage|nachfrage boomt|strong demand|robust demand|surging demand|demand boom",
@@ -88,16 +90,19 @@ NEGATIVE: dict[str, str] = {
     "Kursziel gesenkt": r"kursziel (?:\w+ )?(?:gesenkt|reduziert|gekappt)|(?:senkt|kappt|reduziert) .{0,40}kursziel|(?:cuts?|lowers?|slashes?|trims?) .{0,30}price target|price target (?:cut|lowered|reduced|slashed)",
     "Herabstufung durch Analysten": r"abgestuft|herabgestuft|abstufung|stuft .{0,40} ab\b|verkaufsempfehlung|downgrade[sd]?\b|downgraded to (?:sell|underperform|underweight|neutral|hold)",
     "Klage / Ermittlungen": r"\bklage\b|verklagt|ermittlung|razzia|staatsanwalt|kartellstrafe|bußgeld|strafzahlung|lawsuit|\bsued\b|\bsues\b|\bprobes? (?:into|of)\b|launch(?:es|ed)? (?:a |an )?probe|investigation|antitrust|\bfined\b|penalty|subpoena",
-    "Stellenabbau / Sparprogramm": r"stellenabbau|jobabbau|arbeitsplatzabbau|(?:streicht|abbau von) .{0,30}(?:stellen|jobs|arbeitsplätze)|entlassung|kurzarbeit|sparprogramm|layoffs?|job cuts|cuts? .{0,20}jobs|restructuring|restrukturierung",
+    "Stellenabbau / Sparkurs": r"sparkurs|filialschließung|werksschließung|schließt .{0,40}(?:filialen|werke|standorte|fabrik)|(?:filialen|werke|standorte) (?:schließen|werden geschlossen)|closes? .{0,30}(?:plants|stores|branches|factories)|stellenabbau|jobabbau|arbeitsplatzabbau|(?:streicht|abbau von) .{0,30}(?:stellen|jobs|arbeitsplätze)|entlassung|kurzarbeit|sparprogramm|layoffs?|job cuts|cuts? .{0,20}jobs|restructuring|restrukturierung",
     "Rückruf / Produktionsprobleme": r"rückruf|produktionsstopp|lieferprobleme|lieferengp|recall|production halt|supply (?:problems|issues|disruption)",
     "Zölle / Exportbeschränkungen": r"strafzoll|zölle|zollstreit|exportbeschränkung|exportverbot|exportkontrolle|sanktion|tariffs?|export (?:curbs|ban|restrictions|controls)|sanctions",
     "Insolvenz / Finanzierungsprobleme": r"insolvenz|pleite|zahlungsunfähig|kapitalerhöhung|bankruptcy|chapter 11|going concern|share offering|dilution",
+    "Skandal / Datenleck / Vorwürfe": r"skandal|datenleck|datenleak|enthüllung|vorwürfe|affäre|hackerangriff|cyberangriff|strafbefehl|scandal|allegations|data breach|cyberattack|\bhacked\b|whistleblower",
+    "Leerverkäufer-Attacke": r"leerverkäufer|short[- ]?seller|short report|leerverkaufsattacke",
+    "Mehr Konkurrenz": r"mehr konkurrenz|konkurrenz machen|neue[rn]? konkurrent|(?:um|will|wollen) .{0,30} anzugreifen|new rival|competitive (?:threat|pressure)|price war|preiskampf",
     "Rücktritt im Management": r"tritt zurück|rücktritt|(?:ceo|chef|vorstandschef) (?:geht|verlässt|muss gehen)|(?:ceo|cfo|chief executive) (?:resigns|steps down|ousted|exits|departs)",
 }
 
 # Werbe-/Reisser-Artikel ("Hot Stock", "Kursexplosion" ...) werden komplett ignoriert
 PROMO_RE = re.compile(
-    r"hot[ -]?stock|kursexplosion|kursrakete|vervielfach|verzehnfach|verhundertfach|geheimtipp|\banzeige\b|"
+    r"hot[ -]?stock|kursexplosion|kursrakete|vervielfach|verzehnfach|verhundertfach|geheimtipp|\(anzeige\)|anzeige:|^anzeige\b|"
     r"sponsored|werbung|advertorial|penny[ -]?stock|jetzt kaufen|\b\d{3,4}\s?%|top[- ]pick|millionär|"
     r"diese aktie (?:könnte|wird)|before it'?s too late|could make you rich",
     re.IGNORECASE,
@@ -174,7 +179,7 @@ def find_signals(text: str) -> tuple[list[str], list[str]]:
 
 
 def is_promo(item: bot.NewsItem) -> bool:
-    return bool(PROMO_RE.search(item.title) or PROMO_RE.search(item.summary[:300]))
+    return bool(PROMO_RE.search(item.title))
 
 
 # --------------------------------------------------------------------------- #
@@ -256,8 +261,6 @@ def build_reports(
         # Banken, die oft nur als Analysten-Haus genannt werden ("upgraded at Morgan Stanley"),
         # bekommen keine Signale, wenn noch eine andere Firma in der Meldung steht
         owners = [s for s in in_title if s.ticker not in BROKERS] or in_title
-        if not owners and len(in_text) == 1:
-            owners = in_text
         for st in in_text:
             # Signale nur zuordnen, wenn die Meldung eindeutig von dieser Firma handelt
             own = st in owners

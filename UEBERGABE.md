@@ -21,6 +21,8 @@ Diese Datei ist für die Weiterarbeit auf einem anderen PC bzw. in einer neuen C
   damit es nicht wie eine Anlageempfehlung wirkt.
 - **Quellen sind dem Nutzer sehr wichtig:** pro Aktie bis zu 5 nummerierte Artikel aus
   möglichst verschiedenen Medien, jedes Signal mit Artikelnummer, Quellenblock mit Links.
+- Aktienliste (`aktien.json`, ca. 280 Werte): DAX, MDAX, SDAX, TecDAX, große US- und EU-Werte.
+  Auswahl unabhängig vom Aktienpreis; Zusammensetzung der Indizes ändert sich, Liste nicht automatisch.
 - Kurse von Yahoo Finance (inoffiziell, verzögert); fällt die Abfrage aus, fehlt nur der Kurs.
 - Keine Bilder/Autoren, Artikelseiten werden **nicht** abgerufen. Vorspann max. ca. 150 Zeichen
   (Leistungsschutzrecht der Presseverlage).

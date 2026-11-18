@@ -2,11 +2,22 @@ name: Finanz-News posten
 
 on:
   schedule:
-    - cron: "*/15 * * * *"   # alle 15 Minuten (GitHub startet manchmal ein paar Minuten spaeter)
-  workflow_dispatch:          # manuell starten: Actions -> Finanz-News posten -> Run workflow
+    # GitHub rechnet in UTC und kennt keine Sommerzeit. Deshalb startet jede Ausgabe zu
+    # beiden moeglichen Zeiten; post_news.py postet nur zur richtigen deutschen Uhrzeit
+    # und jede Ausgabe nur einmal. GitHub startet manchmal ein paar Minuten spaeter.
+    - cron: "30 6,7 * * 1-5"     # Mo-Fr 08:30 Uhr  Morgenausgabe
+    - cron: "30 10,11 * * 1-5"   # Mo-Fr 12:30 Uhr  Mittagsausgabe
+    - cron: "15 20,21 * * 1-5"   # Mo-Fr 22:15 Uhr  Abendausgabe
+    - cron: "5 8,9 * * 0,6"      # Sa+So 10:00 Uhr  Wochenendausgabe
+  workflow_dispatch:             # manuell starten: Actions -> Finanz-News posten -> Run workflow
+    inputs:
+      probelauf:
+        description: "Probelauf: nichts posten, nur Vorschau anzeigen"
+        type: boolean
+        default: true
 
 permissions:
-  contents: write             # damit state.json (bereits gepostete News) gespeichert werden kann
+  contents: write                # damit state.json (bereits verwendete News) gespeichert werden kann
 
 concurrency:
   group: finanz-news
@@ -27,15 +38,26 @@ jobs:
       - name: Pakete installieren
         run: pip install -r requirements.txt
 
-      - name: News holen und posten
-        run: python post_news.py
+      - name: Aktien-Ueberblick erstellen und posten
+        run: python post_news.py $OPTIONEN
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           NEWS_CHANNEL_ID: ${{ secrets.NEWS_CHANNEL_ID }}
-          MAX_POSTS_PER_CYCLE: "5"
-          ENRICH_ARTICLES: "true"
+          # Manueller Start: ohne Uhrzeit-Pruefung; als Probelauf zusaetzlich ohne Posten
+          OPTIONEN: >-
+            ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
+            ${{ inputs.probelauf && '--dry-run --ignore-seen' || '' }}
+
+      - name: Vorschau speichern (nur Probelauf)
+        if: ${{ inputs.probelauf }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vorschau
+          path: vorschau.json
+          if-no-files-found: ignore
 
       - name: Gepostete News merken (state.json speichern)
+        if: ${{ !inputs.probelauf }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

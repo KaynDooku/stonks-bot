@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent
 STOCKS_FILE = BASE_DIR / "aktien.json"
 BERLIN = ZoneInfo("Europe/Berlin")
 
-MAX_STOCKS = 6            # hoechstens so viele Aktien pro Ueberblick
+MAX_STOCKS = 8            # hoechstens so viele Aktien pro Ueberblick
 MAX_ARTICLES = 5          # hoechstens so viele Artikel pro Aktie
 TEASER_CHARS = 150        # Vorspann aus dem Artikel: nur ein sehr kurzer Auszug (Presse-Leistungsschutzrecht)
 TITLE_CHARS = 120

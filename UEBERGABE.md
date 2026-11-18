@@ -14,7 +14,8 @@ Diese Datei ist für die Weiterarbeit auf einem anderen PC bzw. in einer neuen C
 ## Nachrichtenformat (gemeinsam mit dem Nutzer festgelegt)
 
 - **Aktien-Überblick** statt einzelner Schlagzeilen: Mo–Fr 8:30 / 12:30 / 22:15 Uhr,
-  Sa + So 10:00 Uhr. Nur posten, wenn mindestens 1 Aktie relevante Signale hat; max. 6 Aktien.
+  Sa + So 10:00 Uhr. Nur posten, wenn mindestens 1 Aktie relevante Signale hat; max. 8 Aktien
+  (Nutzerwunsch; Reihenfolge 🟢 vor 🟡 vor 🔴, Überblick verteilt sich auf ca. 2–3 Nachrichten).
 - **Keine KI** (bewusst entschieden, keine laufenden Kosten). Ampel 🟢🟡🔴 rein regelbasiert
   aus Schlagworten, **neutral formuliert** („Überwiegend positive Nachrichtenlage“ usw.),
   damit es nicht wie eine Anlageempfehlung wirkt.

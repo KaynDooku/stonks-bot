@@ -3,7 +3,7 @@
 Postet zu festen Zeiten einen **Aktien-Überblick** in einen Discord-Channel:
 
 - Mo–Fr um **8:30**, **12:30** und **22:15 Uhr**, Sa + So um **10:00 Uhr** (deutsche Zeit)
-- bis zu **6 Aktien** mit relevanten Neuigkeiten, jeweils mit
+- bis zu **8 Aktien** mit relevanten Neuigkeiten, jeweils mit
   - Kurs und Tagesveränderung (Yahoo Finance, ca. 15 Min. verzögert)
   - bis zu 5 nummerierten Meldungen, möglichst aus verschiedenen Medien, mit kurzem Vorspann
   - erkannten positiven Signalen und Risiken (mit Verweis auf den jeweiligen Artikel)

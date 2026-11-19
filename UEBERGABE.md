@@ -23,6 +23,9 @@ Diese Datei ist für die Weiterarbeit auf einem anderen PC bzw. in einer neuen C
   möglichst verschiedenen Medien, jedes Signal mit Artikelnummer, Quellenblock mit Links.
 - Aktienliste (`aktien.json`, ca. 280 Werte): DAX, MDAX, SDAX, TecDAX, große US- und EU-Werte.
   Auswahl unabhängig vom Aktienpreis; Zusammensetzung der Indizes ändert sich, Liste nicht automatisch.
+- Englische Überschriften/Vorspänne werden für die Anzeige ins Deutsche übersetzt (Google Übersetzer,
+  inoffizielle Schnittstelle, vom Nutzer so gewählt; bei Ausfall bleibt Englisch). Signale/Ampel
+  immer aus dem Original. Hinweis „🌐 übersetzt aus dem Englischen“ unter jeder übersetzten Meldung.
 - Kurse von Yahoo Finance (inoffiziell, verzögert); fällt die Abfrage aus, fehlt nur der Kurs.
 - Keine Bilder/Autoren, Artikelseiten werden **nicht** abgerufen. Vorspann max. ca. 150 Zeichen
   (Leistungsschutzrecht der Presseverlage).

@@ -191,6 +191,8 @@ class Article:
     pos: list[str] = field(default_factory=list)
     neg: list[str] = field(default_factory=list)
     new: bool = True  # noch in keinem frueheren Ueberblick verwendet
+    title_de: str = ""   # deutsche Uebersetzung (nur bei englischen Quellen)
+    teaser_de: str = ""
 
     @property
     def has_signal(self) -> bool:
@@ -351,6 +353,43 @@ async def add_quotes(session: aiohttp.ClientSession, reports: list[StockReport])
 
 
 # --------------------------------------------------------------------------- #
+# Uebersetzung englischer Meldungen (Google Uebersetzer, inoffizielle Schnittstelle)
+# Nur fuer die Anzeige. Signale und Ampel werden immer aus dem Original ermittelt.
+# Faellt die Uebersetzung aus, bleibt der englische Text stehen.
+# --------------------------------------------------------------------------- #
+TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
+
+
+async def translate(session: aiohttp.ClientSession, text: str) -> str:
+    if not text.strip():
+        return ""
+    params = {"client": "gtx", "sl": "en", "tl": "de", "dt": "t", "q": text}
+    try:
+        async with session.get(TRANSLATE_URL, params=params, timeout=aiohttp.ClientTimeout(total=10)) as r:
+            if r.status != 200:
+                bot.log.warning("Uebersetzung: HTTP %s", r.status)
+                return ""
+            data = await r.json(content_type=None)
+        return "".join(seg[0] for seg in data[0] if seg and seg[0]).strip()
+    except (aiohttp.ClientError, asyncio.TimeoutError, ValueError, TypeError, IndexError) as e:
+        bot.log.warning("Uebersetzung fehlgeschlagen (%s)", e)
+        return ""
+
+
+async def add_translations(session: aiohttp.ClientSession, reports: list[StockReport]) -> None:
+    arts = [a for r in reports for a in r.articles if a.item.feed.lang == "en"]
+    sem = asyncio.Semaphore(4)
+
+    async def one(a: Article) -> None:
+        async with sem:
+            a.title_de = await translate(session, a.item.title)
+            first = first_sentence(a.item)
+            a.teaser_de = await translate(session, first) if first else ""
+
+    await asyncio.gather(*(one(a) for a in arts))
+
+
+# --------------------------------------------------------------------------- #
 # Formatierung
 # --------------------------------------------------------------------------- #
 CURRENCY = {"EUR": "€", "USD": "$", "GBP": "£", "CHF": "CHF", "DKK": "DKK", "SEK": "SEK", "NOK": "NOK"}
@@ -406,12 +445,15 @@ def rating_reason(rep: StockReport) -> str:
     return f"{pos_txt}, {neg_txt}"
 
 
-def teaser(item: bot.NewsItem) -> str:
+def first_sentence(item: bot.NewsItem) -> str:
     s = item.summary.strip()
     if not s:
         return ""
-    first = re.split(r"(?<=[a-zäöüß0-9)\]][.!?])\s+(?=[A-ZÄÖÜ„\"'])", s, maxsplit=1)[0]
-    return bot.truncate(first, TEASER_CHARS)
+    return re.split(r"(?<=[a-zäöüß0-9)\]][.!?])\s+(?=[A-ZÄÖÜ„\"'])", s, maxsplit=1)[0]
+
+
+def teaser(item: bot.NewsItem) -> str:
+    return bot.truncate(first_sentence(item), TEASER_CHARS)
 
 
 def stock_embed(rep: StockReport, now: datetime) -> dict:
@@ -424,10 +466,13 @@ def stock_embed(rep: StockReport, now: datetime) -> dict:
     lines.append("")
     lines.append("**📰 Was ist passiert?**")
     for i, a in enumerate(rep.articles, start=1):
-        lines.append(f"**[{i}]** {bot.truncate(a.item.title, TITLE_CHARS)}")
-        t = teaser(a.item)
+        title = a.title_de or a.item.title
+        lines.append(f"**[{i}]** {bot.truncate(title, TITLE_CHARS)}")
+        t = bot.truncate(a.teaser_de, TEASER_CHARS) if a.teaser_de else teaser(a.item)
         if t:
             lines.append(f"> {t}")
+        if a.title_de:
+            lines.append("-# 🌐 übersetzt aus dem Englischen")
 
     sources = []
     for i, a in enumerate(rep.articles, start=1):

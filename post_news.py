@@ -128,6 +128,7 @@ async def main(dry_run: bool, ignore_seen: bool, force: bool) -> None:
         reports = overview.build_reports(items, stocks, seen, window, now)
         if reports:
             await overview.add_quotes(session, reports)
+            await overview.add_translations(session, reports)
         messages = overview.build_overview_messages(reports, [f.name for f in feeds], now, window, edition) if reports else []
 
         if dry_run:

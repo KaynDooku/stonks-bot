@@ -357,65 +357,36 @@ async def add_quotes(session: aiohttp.ClientSession, reports: list[StockReport])
 # Nur fuer die Anzeige. Signale und Ampel werden immer aus dem Original ermittelt.
 # Faellt die Uebersetzung aus, bleibt der englische Text stehen.
 # --------------------------------------------------------------------------- #
-# Mehrere Google-Adressen: lehnt eine ab ("zu viele Anfragen"), wird die naechste versucht
-TRANSLATE_ENDPOINTS = [
-    ("https://translate.googleapis.com/translate_a/single", {"client": "gtx", "dt": "t"}),
-    ("https://clients5.google.com/translate_a/t", {"client": "dict-chrome-ex"}),
-    ("https://translate.google.com/translate_a/single", {"client": "gtx", "dt": "t"}),
-]
-_dead_endpoints: set[str] = set()
-
-
-def _parse_translation(data) -> str:
-    """Liest beide Antwortformate von Google aus."""
-    if isinstance(data, list) and data:
-        first = data[0]
-        if isinstance(first, str):  # clients5: ["Uebersetzung"]
-            return first.strip()
-        if isinstance(first, list) and first:
-            if isinstance(first[0], str):  # clients5: [["Uebersetzung", "en"]]
-                return first[0].strip()
-            # translate_a/single: [[["Teil 1", "orig", ...], ["Teil 2", ...]], ...]
-            return "".join(seg[0] for seg in first if isinstance(seg, list) and seg and isinstance(seg[0], str)).strip()
-    return ""
+TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
 
 
 async def translate(session: aiohttp.ClientSession, text: str) -> str:
     if not text.strip():
         return ""
-    for url, extra in TRANSLATE_ENDPOINTS:
-        if url in _dead_endpoints:
-            continue
-        params = {**extra, "sl": "en", "tl": "de", "q": text}
-        try:
-            async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=10)) as r:
-                if r.status != 200:
-                    bot.log.warning("Uebersetzung %s: HTTP %s - versuche naechste Adresse", url, r.status)
-                    _dead_endpoints.add(url)
-                    continue
-                data = await r.json(content_type=None)
-            result = _parse_translation(data)
-            if result:
-                return result
-        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError, TypeError, IndexError) as e:
-            bot.log.warning("Uebersetzung %s fehlgeschlagen (%s)", url, e)
-            _dead_endpoints.add(url)
-    return ""
+    params = {"client": "gtx", "sl": "en", "tl": "de", "dt": "t", "q": text}
+    try:
+        async with session.get(TRANSLATE_URL, params=params, timeout=aiohttp.ClientTimeout(total=10)) as r:
+            if r.status != 200:
+                bot.log.warning("Uebersetzung: HTTP %s", r.status)
+                return ""
+            data = await r.json(content_type=None)
+        return "".join(seg[0] for seg in data[0] if seg and seg[0]).strip()
+    except (aiohttp.ClientError, asyncio.TimeoutError, ValueError, TypeError, IndexError) as e:
+        bot.log.warning("Uebersetzung fehlgeschlagen (%s)", e)
+        return ""
 
 
 async def add_translations(session: aiohttp.ClientSession, reports: list[StockReport]) -> None:
     arts = [a for r in reports for a in r.articles if a.item.feed.lang == "en"]
-    done = 0
-    for a in arts:  # nacheinander mit kleiner Pause (schont die Schnittstelle)
-        if len(_dead_endpoints) == len(TRANSLATE_ENDPOINTS):
-            break
-        a.title_de = await translate(session, a.item.title)
-        first = first_sentence(a.item)
-        a.teaser_de = await translate(session, first) if first else ""
-        done += bool(a.title_de)
-        await asyncio.sleep(0.4)
-    if arts:
-        print(f"Uebersetzung: {done} von {len(arts)} englischen Meldungen uebersetzt.")
+    sem = asyncio.Semaphore(4)
+
+    async def one(a: Article) -> None:
+        async with sem:
+            a.title_de = await translate(session, a.item.title)
+            first = first_sentence(a.item)
+            a.teaser_de = await translate(session, first) if first else ""
+
+    await asyncio.gather(*(one(a) for a in arts))
 
 
 # --------------------------------------------------------------------------- #

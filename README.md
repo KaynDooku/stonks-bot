@@ -6,7 +6,6 @@ Postet zu festen Zeiten einen **Aktien-Überblick** in einen Discord-Channel:
 - bis zu **8 Aktien** mit relevanten Neuigkeiten, jeweils mit
   - Kurs und Tagesveränderung (Yahoo Finance, ca. 15 Min. verzögert)
   - bis zu 5 nummerierten Meldungen, möglichst aus verschiedenen Medien, mit kurzem Vorspann
-    (englische Meldungen werden automatisch ins Deutsche übersetzt, Google Übersetzer, inoffiziell)
   - erkannten positiven Signalen und Risiken (mit Verweis auf den jeweiligen Artikel)
   - einer automatischen Einstufung 🟢🟡🔴 der **Nachrichtenlage**
   - allen Quellen mit Datum, Uhrzeit und Link zum Nachlesen
